@@ -71,6 +71,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install tar utility to enable persist_to_workspace
+          command: |
+            yum install -y tar gzip
+      - run:
           name: Create Cloudformation Stack
           command: |
             aws cloudformation deploy \
@@ -88,6 +92,7 @@ jobs:
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >> ~/inventory.txt
+            cat ~/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths: 
@@ -117,6 +122,7 @@ jobs:
       - run:
           name: Configure server
           command: |
+            cat ~/inventory.txt
             ansible-playbook -i ~/inventory.txt main4.yml
 
   # Exercise: Smoke Testing
