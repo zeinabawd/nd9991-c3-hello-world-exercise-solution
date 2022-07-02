@@ -45,23 +45,23 @@ jobs:
       - run: echo $_env_name
 
   # Exercise: Sharing Files (Job names may have changed)
-  upload_file:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - run: echo "THIS IS A SAMPLE TEXT" > ~/output.txt  
-      - persist_to_workspace:
-          root: ~/
-          paths: 
-            - output.txt  
+  # upload_file:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - run: echo "THIS IS A SAMPLE TEXT" > ~/output.txt  
+  #     - persist_to_workspace:
+  #         root: ~/
+  #         paths: 
+  #           - output.txt  
 
-  download_file:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run: cat ~/output.txt 
+  # download_file:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/
+  #     - run: cat ~/output.txt 
  
   # Exercise: Infrastructure Creation
   # Exercise - Rollback
@@ -240,12 +240,14 @@ workflows:
     jobs:
       # - welcome/run
       - print_greetings
-      - upload_file
-      - download_file:
-          requires:
-            - upload_file
+      # - upload_file
+      # - download_file:
+      #     requires:
+      #       - upload_file
       - create_infrastructure
-      - configure_infrastructure
+      - configure_infrastructure:
+          requires:
+            create_infrastructure
       - create_and_deploy_front_end
       - promote_to_production:
           requires: 
