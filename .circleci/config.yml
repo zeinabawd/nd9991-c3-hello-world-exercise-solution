@@ -92,6 +92,12 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["0c:55:f7:d7:ad:e3:73:19:0b:e6:c6:46:5c:04:76:94"] # You can get this ID in the section where you registered the SSH Key
       - run:
+          name: Add inventory IP
+          command: |
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text >> inventory.txt
+      - run:
           name: Install dependencies
           command: |
             # install the dependencies needed for your playbook
@@ -129,10 +135,10 @@ jobs:
   # Note that the `--parameter-overrides` let you specify a value that override parameter value in the cloudfront.yml template file.
   # We are assuming that the `PipelineID` parameter represents the bucket ID. 
 
-  # aws cloudformation deploy \
+  # aws --profile Udacity --region us-east-1 cloudformation deploy \
   # --template-file cloudfront.yml \
   # --stack-name production-distro \
-  # --parameter-overrides PipelineID="mybucket644752792305" \ # Name of the S3 bucket you created manually.
+  # --parameter-overrides PipelineID="mybucket-632301097895" \ # Name of the S3 bucket you created manually.
   
   # Job 1
   # Executes the bucket.yml - Deploy an S3 bucket, and interface with that bucket to synchronize the files between local and the bucket.
