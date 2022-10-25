@@ -44,24 +44,24 @@ jobs:
       - run: echo WORLD
       - run: echo $_env_name
 
-  # Exercise: Sharing Files (Job names may have changed)
-  # upload_file:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - run: echo "THIS IS A SAMPLE TEXT" > ~/output.txt  
-  #     - persist_to_workspace:
-  #         root: ~/
-  #         paths: 
-  #           - output.txt  
+  Exercise: Sharing Files (Job names may have changed)
+  upload_file:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: echo "THIS IS A SAMPLE TEXT" > ~/output.txt  
+      - persist_to_workspace:
+          root: ~/
+          paths: 
+            - output.txt  
 
-  # download_file:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - attach_workspace:
-  #         at: ~/
-  #     - run: cat ~/output.txt 
+  download_file:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run: cat ~/output.txt 
  
   # Exercise: Infrastructure Creation
   # Exercise - Rollback
@@ -110,7 +110,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["0c:55:f7:d7:ad:e3:73:19:0b:e6:c6:46:5c:04:76:94"] # You can get this ID in the section where you registered the SSH Key
+          fingerprints: ["1e:b6:e8:83:db:dc:d7:96:5a:9b:1c:d0:aa:24:a4:17"] # You can get this ID in the section where you registered the SSH Key
       - attach_workspace:
           at: ~/
       - run:
@@ -240,20 +240,20 @@ workflows:
     jobs:
       # - welcome/run
       - print_greetings
-      # - upload_file
-      # - download_file:
-      #     requires:
-      #       - upload_file
+      - upload_file
+      - download_file:
+          requires:
+            - upload_file
       - create_infrastructure
       - configure_infrastructure:
           requires:
             - create_infrastructure
-      - create_and_deploy_front_end
-      - promote_to_production:
-          requires: 
-            - create_and_deploy_front_end
-      - get_last_deployment_id
-      - clean_up_old_front_end:
-          requires:
-            - get_last_deployment_id
-            - promote_to_production
+      # - create_and_deploy_front_end
+      # - promote_to_production:
+      #     requires: 
+      #       - create_and_deploy_front_end
+      # - get_last_deployment_id
+      # - clean_up_old_front_end:
+      #     requires:
+      #       - get_last_deployment_id
+      #       - promote_to_production
